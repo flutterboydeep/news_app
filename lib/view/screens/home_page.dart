@@ -1,11 +1,14 @@
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/bloc/bloc_events.dart';
-import 'package:news_app/constants/text_style.dart';
-import 'package:news_app/screens/expanded_page.dart';
+import 'package:news_app/core/text_style.dart';
+import 'package:news_app/view/screens/expanded_page.dart';
 
-import '../bloc/bloc_news.dart';
-import '../bloc/bloc_state.dart';
+import '../../bloc/bloc_news.dart';
+import '../../bloc/bloc_state.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -75,13 +78,14 @@ class _HomePageState extends State<HomePage> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: SizedBox(
-                      height: mqData!.size.height,
+                      height:
+                          mqData!.size.height < 450 ? 500 : mqData!.size.height,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            height: mqData!.size.height * 0.05,
+                            height: mqData!.size.height * 0.06,
                             child: Text("Breaking News !",
                                 style: MTextStyle.mStyle(
                                     fontSize: 20,
@@ -89,7 +93,9 @@ class _HomePageState extends State<HomePage> {
                                     fontColor: Colors.black)),
                           ),
                           SizedBox(
-                            height: mqData!.size.height * 0.3,
+                            height: mqData!.size.height > 500
+                                ? mqData!.size.height * 0.3
+                                : 200,
                             child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
@@ -97,6 +103,7 @@ class _HomePageState extends State<HomePage> {
                                     state.newsHeadingData!.articles!.length,
                                 itemBuilder: (_, index) {
                                   var data = state.newsHeadingData!.articles;
+                                  log("The value of height is ${mqData!.size.height}");
                                   return Padding(
                                     padding: EdgeInsets.only(
                                         right: 15, top: 10, bottom: 10),
@@ -113,7 +120,9 @@ class _HomePageState extends State<HomePage> {
                                         }));
                                       },
                                       child: Container(
-                                        height: mqData!.size.height * 0.2,
+                                        height: mqData!.size.height > 500
+                                            ? mqData!.size.height * 0.2
+                                            : 400,
                                         width: mqData!.size.width * 0.8,
                                         decoration: BoxDecoration(
                                           borderRadius:
@@ -128,10 +137,36 @@ class _HomePageState extends State<HomePage> {
                                                             BorderRadius
                                                                 .circular(15),
                                                         child: Image.network(
-                                                          data[index]
+                                                          state
+                                                              .newsEverythingData!
+                                                              .articles![index]
                                                               .urlToImage!,
                                                           fit: BoxFit.cover,
-                                                        )),
+                                                        )
+                                                        //     CachedNetworkImage(
+                                                        //   imageUrl: data[index]
+                                                        //       .urlToImage!,
+                                                        //   fit: BoxFit.cover,
+                                                        //   placeholder:
+                                                        //       (context, url) =>
+                                                        //           Center(
+                                                        //     child:
+                                                        //         CircularProgressIndicator(),
+                                                        //   ),
+                                                        //   errorWidget: (context,
+                                                        //           url, error) =>
+                                                        //       Center(
+                                                        //     child: Icon(
+                                                        //         Icons.error),
+                                                        //   ),
+                                                        // )
+
+                                                        // Image.network(
+                                                        //   data[index]
+                                                        //       .urlToImage!,
+                                                        //   fit: BoxFit.cover,
+                                                        // )
+                                                        ),
                                                   ),
                                                   Positioned(
                                                       bottom: 10,
@@ -144,16 +179,32 @@ class _HomePageState extends State<HomePage> {
                                                                 .width -
                                                             20,
                                                         child: Container(
-                                                          color: const Color
-                                                              .fromARGB(
-                                                              105, 0, 0, 0),
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    156,
+                                                                    0,
+                                                                    0,
+                                                                    0),
+                                                          ),
                                                           child: Text(
+                                                            maxLines: 3,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             data[index].title!,
                                                             style: MTextStyle.mStyle(
                                                                 fontColor:
                                                                     Colors
                                                                         .white,
-                                                                fontSize: 20,
+                                                                fontSize: 14,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),
@@ -162,52 +213,6 @@ class _HomePageState extends State<HomePage> {
                                                           ),
                                                         ),
                                                       )),
-                                                  Positioned(
-                                                    top: 40,
-                                                    left: 10,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Text(
-                                                          data[index]
-                                                              .source!
-                                                              .name!,
-                                                          style:
-                                                              MTextStyle.mStyle(
-                                                                  fontColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  fontSize: 13,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Icon(
-                                                          Icons.circle,
-                                                          size: 6,
-                                                          color: Colors.white,
-                                                        ),
-                                                        Text(
-                                                          data[index]
-                                                              .publishedAt!,
-                                                          style:
-                                                              MTextStyle.mStyle(
-                                                                  fontColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  fontSize: 13,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )
                                                 ],
                                               )
                                             : Center(
@@ -220,7 +225,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           /*----Trending right now------*/
                           SizedBox(
-                              height: mqData!.size.height * 0.05,
+                              height: mqData!.size.height > 500
+                                  ? mqData!.size.height * 0.05
+                                  : 20,
                               child: Text("Trending Right Now",
                                   style: MTextStyle.mStyle(
                                       fontSize: 20,
@@ -228,7 +235,9 @@ class _HomePageState extends State<HomePage> {
                                       fontColor: Colors.black))),
                           /*----Category Name ------*/
                           SizedBox(
-                            height: mqData!.size.height * 0.06,
+                            height: mqData!.size.height > 500
+                                ? mqData!.size.height * 0.06
+                                : 100,
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
@@ -280,12 +289,15 @@ class _HomePageState extends State<HomePage> {
                                       }));
                                     },
                                     child: Container(
+                                      decoration: BoxDecoration(),
                                       margin: EdgeInsets.symmetric(
                                         vertical: 10,
                                       ),
                                       padding:
                                           EdgeInsets.symmetric(vertical: 6),
-                                      height: mqData!.size.height * 0.14,
+                                      height: mqData!.size.height > 500
+                                          ? mqData!.size.height * 0.14
+                                          : 200,
                                       width: mqData!.size.width,
                                       child: Row(
                                         mainAxisAlignment:
@@ -295,7 +307,9 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           SizedBox(
                                             width: mqData!.size.width * 0.4,
-                                            height: mqData!.size.height * 0.14,
+                                            height: mqData!.size.height > 500
+                                                ? mqData!.size.height * 0.14
+                                                : 200,
                                             child: state
                                                         .newsEverythingData!
                                                         .articles![index]
@@ -311,25 +325,47 @@ class _HomePageState extends State<HomePage> {
                                                           .articles![index]
                                                           .urlToImage!,
                                                       fit: BoxFit.cover,
-                                                    ),
-                                                  )
+                                                    )
+                                                    // child: CachedNetworkImage(
+                                                    //   imageUrl: state
+                                                    //       .newsEverythingData!
+                                                    //       .articles![index]
+                                                    //       .urlToImage!,
+                                                    //   fit: BoxFit.cover,
+                                                    //   placeholder:
+                                                    //       (context, url) =>
+                                                    //           Center(
+                                                    //     child:
+                                                    //         CircularProgressIndicator(),
+                                                    //   ),
+                                                    //   errorWidget: (context,
+                                                    //           url, error) =>
+                                                    //       Center(
+                                                    //     child:
+                                                    //         Icon(Icons.error),
+                                                    //   ),
+                                                    // ))
+                                                    )
                                                 : Center(
                                                     child: Text(
                                                         "No Image loaded!!")),
                                           ),
                                           SizedBox(
                                             width: mqData!.size.width * 0.5,
-                                            height: mqData!.size.height * 0.1,
+                                            height: mqData!.size.height > 500
+                                                ? mqData!.size.height * 0.1
+                                                : 200,
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.start,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Flexible(
                                                   fit: FlexFit.loose,
                                                   child: Text(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     state
                                                         .newsEverythingData!
                                                         .articles![index]
@@ -343,6 +379,8 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                 ),
                                                 Text(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   state
                                                       .newsEverythingData!
                                                       .articles![index]
@@ -355,6 +393,8 @@ class _HomePageState extends State<HomePage> {
                                                             .author !=
                                                         null
                                                     ? Text(
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         'Author: ${state.newsEverythingData!.articles![index].author}')
                                                     : Text(
                                                         "No Author name founded..")

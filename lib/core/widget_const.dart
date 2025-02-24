@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/constants/text_style.dart';
+import 'package:news_app/core/text_style.dart';
 
 class HeadingRow {
   static Widget row({required String heading, required TextStyle style}) {

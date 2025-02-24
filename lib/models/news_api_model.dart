@@ -53,7 +53,6 @@ class NewsDataModel {
   NewsDataModel({this.status, this.articles, this.totalResults});
 
   factory NewsDataModel.fromJson(Map<String, dynamic> json) {
-
     List<ArticleModel> allArticles = [];
     for (Map<String, dynamic> eachArticle in json['articles']) {
       allArticles.add(ArticleModel.fromJson(eachArticle));
@@ -64,4 +63,6 @@ class NewsDataModel {
       totalResults: json['totalResults'],
     );
   }
+
+  map(NewsDataModel Function(dynamic json) param0) {}
 }

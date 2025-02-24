@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app/constants/text_style.dart';
+import 'package:news_app/core/text_style.dart';
 
-import '../models/news_api_model.dart';
+import '../../models/news_api_model.dart';
 
 class ExpandedNews extends StatelessWidget {
   ArticleModel? newsData;

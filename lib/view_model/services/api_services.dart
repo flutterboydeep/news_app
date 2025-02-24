@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../models/news_api_model.dart';
+import '../../models/news_api_model.dart';
 
-class ApiHelper {
-  Future<NewsDataModel?> getApi({required String url}) async {
+class ApiServices {
+  static Future<NewsDataModel?> getApi({required String url}) async {
     Uri uri = Uri.parse(url);
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {

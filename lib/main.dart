@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/bloc/bloc_news.dart';
 
-import 'screens/home_page.dart';
-import 'utils/api_helper.dart';
+import 'view/screens/home_page.dart';
+import 'view_model/services/api_services.dart';
 
 void main() {
   runApp(BlocProvider(
     create: (context) {
-      return BlocNews(apiHelper: ApiHelper());
+      return BlocNews(apiHelper: ApiServices());
     },
     child: MyApp(),
   ));

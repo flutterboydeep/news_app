@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:news_app/bloc/bloc_events.dart';
 import 'package:news_app/bloc/bloc_state.dart';
-import 'package:news_app/utils/api_helper.dart';
+import 'package:news_app/view_model/services/api_services.dart';
 
 class BlocNews extends Bloc<BlocEvents, BlocState> {
-  ApiHelper? apiHelper;
+  ApiServices? apiHelper;
 
   BlocNews({required this.apiHelper}) : super(BlocInitialState()) {
     on<GetNewsBlocEvent>((event, emit) async {
